@@ -32,7 +32,7 @@ class SupervisorProcess extends Model
 	protected $casts = [
 		'channels' => 'array',
 		'metrics' => 'array',
-		'last_ping_at' => 'date',
+		'last_ping_at' => 'datetime',
 	];
 
 	public function supervisor() : BelongsTo
