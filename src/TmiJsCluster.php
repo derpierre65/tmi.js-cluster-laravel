@@ -8,6 +8,15 @@ use Illuminate\Support\Facades\Route;
 
 class TmiJsCluster
 {
+	public static bool $runsMigrations = true;
+
+	public static function ignoreMigrations() : static
+	{
+		static::$runsMigrations = false;
+
+		return new static;
+	}
+
 	public static function routes(array $options = []) : void
 	{
 		$options = array_merge([

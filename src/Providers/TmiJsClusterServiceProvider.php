@@ -4,6 +4,7 @@ namespace derpierre65\TmiJsCluster\Providers;
 
 use derpierre65\TmiJsCluster\ChannelDistributor\IChannelDistributor;
 use derpierre65\TmiJsCluster\Commands\TmiJsClusterPublishCommand;
+use derpierre65\TmiJsCluster\TmiJsCluster;
 use Illuminate\Support\ServiceProvider;
 
 class TmiJsClusterServiceProvider extends ServiceProvider
@@ -21,7 +22,10 @@ class TmiJsClusterServiceProvider extends ServiceProvider
 	protected function config()
 	{
 		$this->mergeConfigFrom(__DIR__.'/../../config/tmi.js-cluster.php', 'tmi.js-cluster');
-		$this->loadMigrationsFrom(__DIR__.'/../../migrations');
+
+		if ( TmiJsCluster::$runsMigrations ) {
+			$this->loadMigrationsFrom(__DIR__.'/../../migrations');
+		}
 	}
 
 	protected function offerPublishing() : void

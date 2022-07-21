@@ -25,7 +25,9 @@
 								<h4 class="text-xl">{{element.value}}</h4>
 							</div>
 							<h4 v-else class="mt-4 font-medium text-2xl">
-								{{formatNumber(element.value)}} {{element.suffix || ''}}
+								<span>{{formatNumber(element.value)}}</span>
+								<small v-if="element.subValue">(+{{formatNumber(element.subValue)}})</small>
+								<span>{{element.suffix || ''}}</span>
 							</h4>
 						</div>
 					</div>
@@ -92,7 +94,7 @@ export default {
 				commands: { title: 'IRC Commands/s', value: 0 },
 				messagesProcessed: { title: 'IRC Messages Processed', value: 0 },
 				commandsProcessed: { title: 'IRC Commands Processed', value: 0 },
-				channels: { title: 'Channels', value: 0 },
+				channels: { title: 'Channels', value: 0, subValue: 0 },
 				processes: { title: 'Processes', value: 0 },
 				memory: { title: 'Memory', value: 0, suffix: 'MB' },
 				status: { title: 'Status', value: 'Unknown', class: 'is-unknown', type: 'icon' },
@@ -149,10 +151,18 @@ export default {
 					let memory = 0;
 					let rawMessages = 0;
 					let messages = 0;
+					let terminatedChannels = 0;
+
 					for (const supervisor of this.supervisors) {
 						processes += supervisor.processes.length;
 						for (const process of supervisor.processes) {
-							channels += process.metrics.channels || 0;
+							if (process.state === 'OPEN') {
+								channels += process.metrics.channels || 0;
+							}
+							else {
+								terminatedChannels += process.metrics.channels || 0;
+							}
+
 							memory += process.metrics.memory || 0;
 							rawMessages = process.metrics.rawMessages;
 							messages = process.metrics.messages;
@@ -162,6 +172,7 @@ export default {
 					this.globalMetrics.messagesProcessed.value = messages;
 					this.globalMetrics.commandsProcessed.value = rawMessages;
 					this.globalMetrics.channels.value = channels;
+					this.globalMetrics.channels.subValue = terminatedChannels;
 					this.globalMetrics.processes.value = processes;
 					this.globalMetrics.memory.value = memory;
 				})
