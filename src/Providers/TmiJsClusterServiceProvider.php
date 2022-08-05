@@ -3,6 +3,8 @@
 namespace derpierre65\TmiJsCluster\Providers;
 
 use derpierre65\TmiJsCluster\ChannelDistributor\IChannelDistributor;
+use derpierre65\TmiJsCluster\Commands\TmiJsClusterJoinCommand;
+use derpierre65\TmiJsCluster\Commands\TmiJsClusterPartCommand;
 use derpierre65\TmiJsCluster\Commands\TmiJsClusterPublishCommand;
 use derpierre65\TmiJsCluster\TmiJsCluster;
 use Illuminate\Support\ServiceProvider;
@@ -47,6 +49,8 @@ class TmiJsClusterServiceProvider extends ServiceProvider
 		if ( $this->app->runningInConsole() ) {
 			$this->commands([
 				TmiJsClusterPublishCommand::class,
+				TmiJsClusterJoinCommand::class,
+				TmiJsClusterPartCommand::class,
 			]);
 		}
 	}
