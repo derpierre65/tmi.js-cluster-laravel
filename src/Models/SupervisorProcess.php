@@ -21,11 +21,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class SupervisorProcess extends Model
 {
+	protected $table = 'tmi_cluster_supervisor_processes';
+
 	public $incrementing = false;
 
 	protected $keyType = 'string';
-
-	protected $table = 'tmi_cluster_supervisor_processes';
 
 	protected $guarded = [];
 
