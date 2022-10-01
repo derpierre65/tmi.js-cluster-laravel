@@ -7,13 +7,15 @@ use Illuminate\Console\Command;
 
 class TmiJsClusterJoinCommand extends Command
 {
-	protected $signature = 'tmijs-cluster:join {channel} {now?}';
+	protected $signature = 'tmijs-cluster:join {channel} {now?} {cluster?}';
 
 	protected $description = 'Join the given channel';
 
-	public function handle() : int
+	public function handle(TmiJsCluster $tmiJsCluster) : int
 	{
-		TmiJsCluster::join(explode(',', $this->argument('channel')), !!$this->argument('now'));
+		$tmiJsCluster
+			->setCluster($this->argument('cluster') ?? 'default')
+			->join(explode(',', $this->argument('channel')), !!$this->argument('now'));
 
 		return Command::SUCCESS;
 	}

@@ -5,6 +5,15 @@ namespace derpierre65\TmiJsCluster\ChannelDistributor;
 interface IChannelDistributor
 {
 	/**
+	 * Set the name of the current cluster.
+	 *
+	 * @param string $clusterName
+	 *
+	 * @return $this
+	 */
+	public function setCluster(string $clusterName) : self;
+
+	/**
 	 * Join some channels. Command will be queued.
 	 *
 	 * @param array $channels a list of channels that should be joined

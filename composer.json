@@ -2,9 +2,9 @@
 	"name": "derpierre65/tmi.js-cluster",
 	"description": "Laravel package for tmi.js-cluster.",
 	"type": "library",
-	"version": "1.0.0-alpha",
+	"version": "1.0.0",
 	"require": {
-		"php": "^7.4|^8.0|^8.1",
+		"php": "^8.0|^8.1",
 		"ext-json": "*",
 		"illuminate/console": "^8.1|^9.0",
 		"illuminate/support": "^8.1|^9.0",
