@@ -2,7 +2,6 @@
 
 namespace derpierre65\TmiJsCluster\Providers;
 
-use derpierre65\TmiJsCluster\ChannelDistributor\IChannelDistributor;
 use derpierre65\TmiJsCluster\Commands\TmiJsClusterJoinCommand;
 use derpierre65\TmiJsCluster\Commands\TmiJsClusterPartCommand;
 use derpierre65\TmiJsCluster\Commands\TmiJsClusterPublishCommand;
@@ -15,7 +14,6 @@ class TmiJsClusterServiceProvider extends ServiceProvider
 	{
 		$this->config();
 		$this->offerPublishing();
-		$this->registerServices();
 		$this->registerCommands();
 		$this->registerFrontend();
 		$this->defineAssetPublishing();
@@ -37,11 +35,6 @@ class TmiJsClusterServiceProvider extends ServiceProvider
 				__DIR__.'/../../config/tmi.js-cluster.php' => config_path('tmi.js-cluster.php'),
 			], 'tmi.js-cluster-config');
 		}
-	}
-
-	protected function registerServices() : void
-	{
-		$this->app->singleton(IChannelDistributor::class, config('tmi.js-cluster.channel_distributor.class'));
 	}
 
 	protected function registerCommands() : void

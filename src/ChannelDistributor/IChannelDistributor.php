@@ -18,12 +18,13 @@ interface IChannelDistributor
 	 *
 	 * @param array $channels a list of channels that should be joined
 	 */
-	public function join(array $channels) : void;
+	public function join(array $channels, bool $now = false) : void;
 
 	/**
 	 * Join some channels with higher priority.
 	 *
 	 * @param array $channels a list of channels that should be joined
+	 * @deprecated
 	 */
 	public function joinNow(array $channels) : void;
 
@@ -32,12 +33,13 @@ interface IChannelDistributor
 	 *
 	 * @param array $channels a list of channels that should be parted
 	 */
-	public function part(array $channels) : void;
+	public function part(array $channels, bool $now = false) : void;
 
 	/**
 	 * Part some given channels with higher priority.
 	 *
 	 * @param array $channels a list of channels that should be parted
+	 * @deprecated
 	 */
 	public function partNow(array $channels) : void;
 }

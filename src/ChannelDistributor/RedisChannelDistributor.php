@@ -2,7 +2,7 @@
 
 namespace derpierre65\TmiJsCluster\ChannelDistributor;
 
-use derpierre65\TmiJsCluster\TmiJsCluster;
+use derpierre65\TmiJsCluster\Enums\CommandQueue;
 use Illuminate\Support\Facades\Redis;
 
 class RedisChannelDistributor implements IChannelDistributor
@@ -21,47 +21,49 @@ class RedisChannelDistributor implements IChannelDistributor
 		return config('tmi.js-cluster.clusters.'.$this->currentCluster.'.channel_distributor.prefix');
 	}
 
-	public function join(array $channels) : void
+	public function join(array $channels, bool $now = false) : void
 	{
-		Redis::RPUSH($this->getRedisPrefix().'commands:join-handler', json_encode([
-			'time' => time(),
-			'command' => 'join',
-			'options' => [
-				'channels' => $channels,
-			],
-		]));
+		$redisPrefix = $this->getRedisPrefix();
+
+		foreach ( $channels as $channel ) {
+			Redis::{$now ? 'LPUSH' : 'RPUSH'}($redisPrefix.'commands:'.CommandQueue::COMMAND_QUEUE, json_encode([
+				'time' => time(),
+				'command' => CommandQueue::COMMAND_JOIN,
+				'options' => [
+					'channel' => $channel,
+				],
+			]));
+		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function joinNow(array $channels) : void
 	{
-		Redis::LPUSH($this->getRedisPrefix().'commands:join-handler', json_encode([
-			'time' => time(),
-			'command' => 'join',
-			'options' => [
-				'channels' => $channels,
-			],
-		]));
+		$this->join($channels, true);
 	}
 
-	public function part(array $channels) : void
+	public function part(array $channels, bool $now = false) : void
 	{
-		Redis::RPUSH($this->getRedisPrefix().'commands:join-handler', json_encode([
-			'time' => time(),
-			'command' => 'part',
-			'options' => [
-				'channels' => $channels,
-			],
-		]));
+		$redisPrefix = $this->getRedisPrefix();
+
+		foreach ( $channels as $channel ) {
+			Redis::{$now ? 'LPUSH' : 'RPUSH'}($redisPrefix.'commands:'.CommandQueue::COMMAND_QUEUE, json_encode([
+				'time' => time(),
+				'command' => CommandQueue::COMMAND_PART,
+				'options' => [
+					'channel' => $channel,
+				],
+			]));
+		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function partNow(array $channels) : void
 	{
-		Redis::LPUSH($this->getRedisPrefix().'commands:join-handler', json_encode([
-			'time' => time(),
-			'command' => 'part',
-			'options' => [
-				'channels' => $channels,
-			],
-		]));
+		$this->part($channels, true);
 	}
 }

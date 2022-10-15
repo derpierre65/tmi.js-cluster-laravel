@@ -2,6 +2,7 @@
 
 namespace derpierre65\TmiJsCluster;
 
+use derpierre65\TmiJsCluster\ChannelDistributor\IChannelDistributor;
 use derpierre65\TmiJsCluster\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,13 +51,15 @@ class TmiJsCluster
 	 *
 	 * @return void
 	 */
-	public function join($channels, bool $now = false) : void
+	public function join(array|string $channels, bool $now = false) : void
 	{
 		if ( is_string($channels) ) {
 			$channels = [$channels];
 		}
 
-		app(config('tmi.js-cluster.clusters.'.$this->currentCluster.'.channel_distributor.class'))->setCluster($this->currentCluster)->{$now ? 'joinNow' : 'join'}($channels);
+		/** @var IChannelDistributor $distributor */
+		$distributor = app(config('tmi.js-cluster.clusters.'.$this->currentCluster.'.channel_distributor.class'));
+		$distributor->setCluster($this->currentCluster)->join($channels, $now);
 	}
 
 	/**
@@ -65,12 +68,14 @@ class TmiJsCluster
 	 *
 	 * @return void
 	 */
-	public function part($channels, bool $now = false) : void
+	public function part(array|string $channels, bool $now = false) : void
 	{
 		if ( is_string($channels) ) {
 			$channels = [$channels];
 		}
 
-		app(config('tmi.js-cluster.clusters.'.$this->currentCluster.'.channel_distributor.class'))->setCluster($this->currentCluster)->{$now ? 'partNow' : 'part'}($channels);
+		/** @var IChannelDistributor $distributor */
+		$distributor = app(config('tmi.js-cluster.clusters.'.$this->currentCluster.'.channel_distributor.class'));
+		$distributor->setCluster($this->currentCluster)->part($channels, $now);
 	}
 }
